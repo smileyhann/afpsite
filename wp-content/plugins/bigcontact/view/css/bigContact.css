@@ -1,0 +1,173 @@
+.bigContact{
+    width: 100%;
+    float: left;
+}
+
+.bigContact ul{
+    margin: 0 0 15px 0 !important;
+    padding: 0 !important;
+}
+
+.bigContact ul li{
+    background-image: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    clear: both !important;
+    width: 100% !important;
+}
+.bigContact input{
+    margin-bottom: 7px !important;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.bigContact input.BigContact-input, .bigContact form textarea{
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.bigContact #bigContact-submit{
+    float: left !important;
+    margin: 5px 5px 5px 0 !important;
+}
+
+.bigContact #bigContact-results {
+    -moz-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    text-align: left;
+    color: #333;
+}
+.bigContact .success {
+    margin: 10px 0;
+    padding: 0;
+    border-width: 1px;
+    border-style: solid;
+    width: 99%;
+    background:#e0ffe0;
+    border-color:#55e655;
+}
+.bigContact .error {
+    margin: 10px 0;
+    padding: 0;
+    border-width: 1px;
+    border-style: solid;
+    width: 99%;
+    background:#ffe0e0  !important;
+    border-color: #e65555 !important;
+}
+.bigContact .success p, .bigContact .error p{
+    margin: 0.6em 0;
+    padding: 0 0.6em;
+}
+.bigContact .success a, .bigContact .error a{
+    text-decoration: none;
+    padding-bottom: 2px;
+}
+
+.bigContact table
+{
+    border-collapse: collapse !important;
+    margin: 2px 0 !important;
+    padding: 0 !important;
+}
+
+.bigContact table td, .bigContact table th, .bigContact table tr
+{
+    padding: 1% !important;
+}
+.bigContact-hidden {
+    display:none !important;
+}
+
+#bigContact_map_canvas {
+    display: block;
+    width: 100%;
+    height: 350px;
+}
+
+#bigContact_map_canvas div img{
+    max-width: none  !important;
+}
+
+#bigContact-loading {
+    display: none;
+    float: left;
+    height: 16px;
+    width: 16px;
+    margin: 10px 0 0 10px;
+    background: url(../images/loading.gif) no-repeat 0 0;
+}
+.bigContact-label{
+    float: left;
+    min-width: 120px;
+    max-width: 220px;
+}
+.bigContact-day-label{
+    float: left;
+    min-width: 85px;
+}
+.bigContact-value{
+    float: right;
+}
+
+.bigContact-halfSize:nth-child(even){
+    float: left;
+    display: block;
+    width: 47%;
+    border: 0px solid red;
+    clear: none;
+}
+
+.bigContact-halfSize:nth-child(odd){
+    float: right;
+    display: block;
+    width: 47%;
+    margin-right: 0;
+    border: 0px solid red;
+    clear: none;
+}
+
+.bigContact-fullSize{
+    display: block;
+    width: 100%;
+    clear:both;
+}
+
+.bigContact .ui-datepicker {
+    float: right !important;
+    width: 97% !important;
+}
+
+.bigContact .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.bigContact .ui-timepicker-div dl,
+.bigContact .ui-timepicker-div dt,
+.bigContact .ui-timepicker-div dd{
+    margin: 0;
+    padding: 0;
+    float: none;
+    border: 0;
+    width: auto;
+    clear: none;
+}
+.bigContact .ui-timepicker-div dl {text-align: left; }
+.bigContact .ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; line-height: 25px;}
+.bigContact .ui-timepicker-div dl dd { margin: 3px 10px 7px 80px; }
+.bigContact .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.bigContact-clearfix:before, .clearfix:after { content: ""; display: table; }
+.bigContact-clearfix:after { clear: both; }
+
+@media only screen and (max-width : 640px){
+    .bigContact-halfSize:nth-child(even),
+    .bigContact-halfSize:nth-child(odd){
+        float: left;
+        width: 100%;
+        clear: both;
+    }
+}

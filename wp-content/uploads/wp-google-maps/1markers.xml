@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<markers>
+  <marker>
+    <marker_id>2</marker_id>
+    <map_id>1</map_id>
+    <title></title>
+    <address>Arturo Enrile Avenue, Quezon City 1100</address>
+    <desc></desc>
+    <pic></pic>
+    <icon></icon>
+    <linkd></linkd>
+    <lat>14.6087799</lat>
+    <lng>121.0683156</lng>
+    <anim>0</anim>
+    <category></category>
+    <infoopen>0</infoopen>
+  </marker>
+  <marker>
+    <marker_id>3</marker_id>
+    <map_id>1</map_id>
+    <title></title>
+    <address>Arturo Enrile Avenue, Quezon City 1100</address>
+    <desc></desc>
+    <pic></pic>
+    <icon></icon>
+    <linkd></linkd>
+    <lat>14.6087799</lat>
+    <lng>121.0683156</lng>
+    <anim>0</anim>
+    <category></category>
+    <infoopen>0</infoopen>
+  </marker>
+</markers>

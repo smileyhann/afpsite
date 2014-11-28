@@ -1,0 +1,168 @@
+<?php
+$saveUrl = BIGCONTACT_URL . 'include/saveForm.php';
+$indicatorUrl = BIGCONTACT_URL . 'view/images/ajax-loader.gif';
+$formMapper = new BigContact_Models_FormMapper();
+$forms = $formMapper->fetchAll();
+if (!$form = $forms[0])
+    $form = new BigContact_Models_Form();
+$phone_mapper = new BigContact_Models_PhoneMapper();
+$email_mapper = new BigContact_Models_EmailMapper();
+$phones = $phone_mapper->fetchAll();
+$emails = $email_mapper->fetchAll();
+
+$bigSettingsMapper = new BigContact_Models_SettingsMapper();
+if (!$bigSettings = $bigSettingsMapper->fetchAll())
+    $bigSettings = new BigContact_Models_Settings();
+else
+    $bigSettings = $bigSettings[0];
+
+$messages = array();
+$message_type = '';
+if (!empty($_POST)) {
+    $bigSettings->setGapiKey(trim(strip_tags($_POST['gapiKey'])));
+    if (!$bigSettingsMapper->save($bigSettings)) {
+        $messages[] = 'No changes made';
+        $message_type = 'update';
+    } else {
+        $messages[] = 'Options updated';
+        $message_type = 'update';
+    }
+}
+?>
+
+<script>
+    bigDatePicker = "<?php echo $bigSettings->getCalendarType(); ?>";
+    bigDateFormat = "<?php echo $bigSettings->getDateFormat(); ?>";
+    bigTimeFormat = "<?php echo $bigSettings->getTimeFormat(); ?>";
+    bigAmpm = <?php echo $bigSettings->getAmpm(); ?>;
+    bigShowMinute = <?php echo $bigSettings->getShowMinute(); ?>;
+</script>
+<div class="wrap">
+    <?php $title = __('Big Contact') ?>
+    <div id="icon-big-contact" class="icon32"><br></div>
+    <h2><?php echo $title . ' '; ?></h2>
+
+    <?php echo Functions_GetMessages($messages, $message_type) ?>
+    <form method="post" action="#">
+        <h3 id="form_title" class="label-text"><?php echo $form->getForm_title() ? $form->getForm_title() : 'Click to edit'; ?></h3>
+        <div class="contact-box">
+            <ul class="halfSize">
+                <li class="input">
+                    <label id="name_label" class="label-text"><?php echo $form->getName_label() ? $form->getName_label() : 'Click to edit'; ?></label>
+                    <span><input type="text" class="input-text" size="30" tabindex="1" readonly disabled/></span>
+                </li>
+                <li class="input">
+                    <label id="email_label" class="label-text"><?php echo $form->getEmail_label() ? $form->getEmail_label() : 'Click to edit'; ?></label>
+                    <span><input type="text" class="input-text" size="30" tabindex="2" readonly disabled/></span>
+                </li>
+                <li class="input">
+                    <label id="phone_label" class="label-text"><?php echo $form->getPhone_label() ? $form->getPhone_label() : 'Click to edit'; ?></label>
+                    <span><input type="text" class="input-text" size="30" tabindex="3" readonly disabled value="Optional Field"/></span>
+                </li>
+                <li class="input">
+                    <label id="extra_label" class="label-text"><?php echo $form->getExtra_label() ? $form->getExtra_label() : 'Click to edit'; ?></label>
+                    <span><input type="text" class="input-text" size="30" tabindex="4" readonly disabled value="Optional Field"/></span>
+                </li>
+            </ul>
+            <ul class="halfSize">
+                <li>
+                    <label><input type="checkbox" readonly disabled /><span id="appointment_text" class="label-text"><?php echo $form->getAppointment_text() ? $form->getAppointment_text() : 'Click to edit'; ?></span></label>
+                </li>
+                <li><div id="datepicker"></div></li>
+            </ul>
+            <ul class="fullSize">
+                <li><label id="message_label" class="label-text"><?php echo $form->getMessage_label() ? $form->getMessage_label() : 'Click to edit'; ?></label>
+                    <textarea style="resize: none;" rows="5" readonly disabled></textarea></li>
+                <li class="clearfix"></li>
+                <li>
+                    <div id="send_mail" class="display-button label-text"><?php echo $form->getSend_mail() ? $form->getSend_mail() : 'Click to edit'; ?></div>
+                </li>
+            </ul>
+        </div>
+        <div class="halfSize">
+            <h3 id="tel_title" class="label-text"><?php echo $form->getTel_title() ? $form->getTel_title() : 'Click to edit'; ?></h3>
+            <div class="contact-box">
+                <ul id="phone-box">
+                    <?php foreach ($phones as $phone): ?>
+                        <li id="<?php echo $phone->getId() ?>"><span id="p_label" class="label-update halfSize"><?php echo $phone->getLabel() ? $phone->getLabel() : 'Click to edit'; ?></span> <span id="phone_number" class="label-update halfSize"><?php echo $phone->getNumber() ? $phone->getNumber() : 'Click to edit'; ?></span></li>
+                    <?php endforeach; ?>
+                </ul>
+
+                <div class="clearfix"></div>
+
+                <a href="#" class="add-button ui-state-default ui-corner-all">
+                    <span class="ui-icon ui-icon-circle-plus"></span></a>
+                <a href="#" class="remove-button ui-state-default ui-corner-all">
+                    <span class="ui-icon ui-icon-circle-minus"></span></a>
+            </div>
+            <h3 id="email_title" class="label-text"><?php echo $form->getEmail_title() ? $form->getEmail_title() : 'Click to edit'; ?></h3>
+            <div class="contact-box">
+                <ul id="email-box">
+                    <?php foreach ($emails as $email): ?>
+                        <li id="<?php echo $email->getId() ?>"><span id="e_label" class="label-update halfSize"><?php echo $email->getLabel() ? $email->getLabel() : 'Click to edit'; ?></span> <span id="email_address" class="label-update halfSize"><?php echo $email->getAddress() ? $email->getAddress() : 'Click to edit'; ?></span></li>
+                    <?php endforeach; ?>
+                </ul>
+
+                <div class="clearfix"></div>
+
+                <a href="#" class="add-button ui-state-default ui-corner-all">
+                    <span class="ui-icon ui-icon-circle-plus"></span></a>
+                <a href="#" class="remove-button ui-state-default ui-corner-all">
+                    <span class="ui-icon ui-icon-circle-minus"></span></a>
+            </div>
+            <h3 id="hours_title" class="label-text"><?php echo $form->getHours_title() ? $form->getHours_title() : 'Click to edit'; ?></h3>
+            <div class="contact-box">
+                <ul id="hours-box">
+                    <li>
+                        <span id="big-mon" class="halfSize">Monday: </span><span id="mon_from" class="label-inplace halfSize"><?php echo $form->getMon_from() ? $form->getMon_from() : 'Click to edit'; ?></span>
+                        <span id="big-tue" class="halfSize">Tuesday: </span><span id="tue_from" class="label-inplace halfSize"><?php echo $form->getTue_from() ? $form->getTue_from() : 'Click to edit'; ?></span>
+                        <span id="big-wed" class="halfSize">Wednesday: </span><span id="wed_from" class="label-inplace halfSize"><?php echo $form->getWed_from() ? $form->getWed_from() : 'Click to edit'; ?></span>
+                        <span id="big-thu" class="halfSize">Thursday: </span><span id="thu_from" class="label-inplace halfSize"><?php echo $form->getThu_from() ? $form->getThu_from() : 'Click to edit'; ?></span>
+                        <span id="big-fri" class="halfSize">Friday: </span><span id="fri_from" class="label-inplace halfSize"><?php echo $form->getFri_from() ? $form->getFri_from() : 'Click to edit'; ?></span>
+                        <span id="big-sat" class="halfSize">Saturday: </span><span id="sat_from" class="label-inplace halfSize"><?php echo $form->getSat_from() ? $form->getSat_from() : 'Click to edit'; ?></span>
+                        <span id="big-sun" class="halfSize">Sunday: </span><span id="sun_from" class="label-inplace halfSize"><?php echo $form->getSun_from() ? $form->getSun_from() : 'Click to edit'; ?></span>
+                    </li>
+                </ul>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="halfSize">
+            <h3 id="map_title" class="label-text"><?php _e($form->getMap_title()) ?></h3>
+            <div class="contact-box">
+                <ul id="map-box">
+                    <li id="map_description" class="map-label"><?php _e($form->getMap_description()) ?></li>
+                    <?php if (!$bigSettings->getGapiKey()): ?>
+                        <li>
+                            <label for="gapiKey"><strong>Provide your Google Maps Api Key to Display the Map:</strong></label>
+                            <span><input class="fullSize" type="text" id="gapiKey" name="gapiKey" /></span>
+                            <input type="submit" value="Save API Key" />
+                        </li>
+                        <li>
+                            <span class="description">To create your API key:<br /><br />
+                                1. Visit the APIs Console at <a href="https://code.google.com/apis/console">https://code.google.com/apis/console</a> and log in with your Google Account.<br />
+                                2. Click the Services link from the left-hand menu.<br />
+                                3. Activate the Google Maps API v3 service.<br />
+                                4. Click the API Access link from the left-hand menu. Your API key is available from the API Access page, in the Simple API Access section. Maps API applications use the Key for browser apps.</span>
+                        </li>
+                    <?php else: ?>
+                        <li><div id="map_canvas"></div></li>
+                    <?php endif; ?>
+                    <li id="map_address"><span id="address" class="map-address fullSize"><?php _e($form->getAddress()) ?></span></li>
+                </ul>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+<?php
+if ($bigSettings->getGapiKey())
+    echo '<script src="http://maps.googleapis.com/maps/api/js?key=' .
+    $bigSettings->getGapiKey() . '&sensor=false"></script>';
+?>
+<script>
+    var save_url = "<?php echo BIGCONTACT_URL . 'include/saveForm.php' ?>";
+    var indicator_url = "<?php echo BIGCONTACT_URL . 'view/images/ajax-loader.gif'; ?>";
+    var has_api_key = "<?php echo $bigSettings->getGapiKey() ?>";
+</script>

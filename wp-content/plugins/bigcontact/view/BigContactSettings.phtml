@@ -1,0 +1,291 @@
+<?php
+$bigSettingsMapper = new BigContact_Models_SettingsMapper();
+if (!$bigSettings = $bigSettingsMapper->fetchAll())
+    $bigSettings = new BigContact_Models_Settings();
+else
+    $bigSettings = $bigSettings[0];
+
+$messages = array();
+$message_type = '';
+
+if (!empty($_POST)) {
+    if (isset($_POST['bcc']))
+        $bigSettings->setBCC(stripslashes(trim(strip_tags($_POST['bcc']))));
+    if (isset($_POST['email-to']))
+        $bigSettings->setEmail_to(stripslashes(trim(strip_tags($_POST['email-to']))));
+    if (isset($_POST['email-appoint']))
+        $bigSettings->setAppointTo(stripslashes(trim(strip_tags($_POST['email-appoint']))));
+    if (isset($_POST['general-subject']))
+        $bigSettings->setEmailSubject(trim(strip_tags($_POST['general-subject'])));
+    if (isset($_POST['general-message']))
+        $bigSettings->setEmailMessage(trim(strip_tags($_POST['general-message'])));
+    if (isset($_POST['appoint-subject']))
+        $bigSettings->setAppointSubject(trim(strip_tags($_POST['appoint-subject'])));
+    if (isset($_POST['appoint-message']))
+        $bigSettings->setAppointMessage(trim(strip_tags($_POST['appoint-message'])));
+    if (isset($_POST['response']))
+        $bigSettings->setResponse(trim(strip_tags($_POST['response'])));
+    if (isset($_POST['response-reply']))
+        $bigSettings->setReplyEmail(trim(strip_tags($_POST['response-reply'])));
+    if (isset($_POST['response-subject']))
+        $bigSettings->setReplySubject(trim(strip_tags($_POST['response-subject'])));
+    if (isset($_POST['response-message']))
+        $bigSettings->setReplyMessage(stripslashes(trim(strip_tags($_POST['response-message']))));
+    if (isset($_POST['gapiKey']))
+        $bigSettings->setGapiKey(trim(strip_tags($_POST['gapiKey'])));
+
+    if (isset($_POST['jQuery-ui-style']))
+        $bigSettings->setJQueryUiPath(trim(strip_tags($_POST['jQuery-ui-style'])));
+    if (isset($_POST['time-date-picker']))
+        $bigSettings->setCalendarType(trim(strip_tags($_POST['time-date-picker'])));
+    if (isset($_POST['date-format']))
+        $bigSettings->setDateFormat(trim(strip_tags($_POST['date-format'])));
+    if (isset($_POST['time-format']))
+        $bigSettings->setTimeFormat(trim(strip_tags($_POST['time-format'])));
+    if (isset($_POST['ampm']))
+        $bigSettings->setAmpm('true');
+    else
+        $bigSettings->setAmpm('false');
+    if (isset($_POST['minute-bar']))
+        $bigSettings->setShowMinute('true');
+    else
+        $bigSettings->setShowMinute('false');
+
+    if (isset($_POST['locale'])) {
+        $bigSettings->setLocale(trim(strip_tags($_POST['locale'])));
+    }
+
+    if (isset($_POST['trackingCallback'])) {
+        $bigSettings->setTrackingCallback(strip_tags(htmlentities(stripslashes(trim($_POST['trackingCallback'])))));
+    }
+    if (isset($_POST['tracking'])) {
+        $bigSettings->setTracking(strip_tags(htmlentities(stripslashes(trim($_POST['tracking'])))));
+    }
+    if (!$bigSettingsMapper->save($bigSettings)) {
+        $messages[] = 'No changes made';
+        $message_type = 'update';
+    } else {
+        $messages[] = 'Options updated';
+        $message_type = 'update';
+    }
+}
+$jQuery_styles = Functions_GetJQueryUiStyles();
+?>
+
+<div class="wrap">
+    <?php $title = __('Big Contact Settings') ?>
+    <div id="icon-options-general" class="icon32"><br></div>
+    <h2><?php echo $title . ' '; ?></h2>
+    <?php echo Functions_GetMessages($messages, $message_type) ?>
+    <form method="post" action="?page=big-contact-settings">
+        <h3>General Email Settings:</h3>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row"><label for="email-to">BCC</label></th>
+                <td><textarea name="bcc" id="bcc" class="regular-text" cols="55" rows="3"><?php _e($bigSettings->getBCC()) ?></textarea></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="email-to">General E-mail To</label><br /><span class="description">Who should receive the e-mails? Enter each address on a new line</span></th>
+                <td><textarea name="email-to" id="email-to" class="regular-text" cols="55" rows="3"><?php _e($bigSettings->getEmailTo()) ?></textarea></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="email-appoint">Appointment E-mail To</label><br /><span class="description">Who should receive the Appointment e-mails? Enter each address on a new line</span></th>
+                <td><textarea name="email-appoint" id="email-appoint" class="regular-text" cols="55" rows="3"><?php _e($bigSettings->getAppointTo()) ?></textarea></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="general-subject">General Email Subject</label></th>
+                <td><input type="text" name="general-subject" id="general-subject" class="regular-text" value="<?php _e($bigSettings->getEmailSubject()) ?>"/></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="appoint-subject">Appointment Email Subject</label></th>
+                <td><input type="text" name="appoint-subject" id="appoint-subject" class="regular-text" value="<?php _e($bigSettings->getAppointSubject()) ?>"/></td>
+            </tr>
+        </table>
+        <h3>Appointment Response Settings:</h3>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row">Send Reply E-mail</th>
+                <td><label for="response"><input type="checkbox" name="response" id="response" <?php if ($bigSettings->getResponse() == 'on') echo 'checked' ?> /> Send confirmation email on appointment request.</label></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="response-reply">Reply E-mail</label><br /><span class="description">example: no-reply@company.com</span></th>
+                <td><input type="text" name="response-reply" id="response-reply" class="regular-text" value="<?php _e($bigSettings->getReplyEmail()) ?>"/></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="response-subject">Subject</label></th>
+                <td><input type="text" name="response-subject" id="response-subject" class="regular-text" value="<?php _e($bigSettings->getReplySubject()) ?>"/></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="response-message">Message Template</label>
+                    <br /><span class="description">[name] = clients name<br />
+                        [email] = clients email<br /> [phone] = clients phone<br />
+                        [extra] = clients extra<br /> [message] = clients message<br />
+                        [date] => appointment date</span></th>
+                <td><textarea name="response-message" id="response-message" class="regular-text" cols="55" rows="9"><?php _e($bigSettings->getReplyMessage()) ?></textarea></td>
+            </tr>
+        </table>
+        <h3>Calendar Settings:</h3>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row"><label for="jQuery-ui-style">Select Calendar Style</label></th>
+                <td><select name="jQuery-ui-style" id="jQuery-ui-style" class="regular-text">
+                        <?php foreach ($jQuery_styles as $jQuery_style): ?>
+                            <option value="<?php echo $jQuery_style->getPath() ?>"
+                            <?php if ($bigSettings->getJQueryUiPath() == $jQuery_style->getPath()): ?>
+                                        selected="selected"
+                                    <?php endif; ?>>
+                                        <?php echo $jQuery_style->getName() ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th><label for="locale">Locale</label></th>
+                <td>
+                    <select id="locale" name="locale">
+                        <option value="en" <?php selected($bigSettings->getLocale(), 'en'); ?>>English/US</option>
+                        <option value="af" <?php selected($bigSettings->getLocale(), 'af'); ?>>Afrikaans</option>
+                        <option value="sq" <?php selected($bigSettings->getLocale(), 'sq'); ?>>Albanian (Gjuha shqipe)</option>
+                        <option value="ar-DZ" <?php selected($bigSettings->getLocale(), 'ar-DZ'); ?>>Algerian Arabic</option>
+                        <option value="ar" <?php selected($bigSettings->getLocale(), 'ar'); ?>>Arabic (&#8235;(&#1604;&#1593;&#1585;&#1576;&#1610;</option>
+                        <option value="hy" <?php selected($bigSettings->getLocale(), 'hy'); ?>>Armenian (&#1344;&#1377;&#1397;&#1381;&#1408;&#1381;&#1398;)</option>
+                        <option value="az" <?php selected($bigSettings->getLocale(), 'az'); ?>>Azerbaijani (Az&#601;rbaycan dili)</option>
+                        <option value="eu" <?php selected($bigSettings->getLocale(), 'eu'); ?>>Basque (Euskara)</option>
+                        <option value="bs" <?php selected($bigSettings->getLocale(), 'bs'); ?>>Bosnian (Bosanski)</option>
+                        <option value="bg" <?php selected($bigSettings->getLocale(), 'bg'); ?>>Bulgarian (&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080; &#1077;&#1079;&#1080;&#1082;)</option>
+                        <option value="ca" <?php selected($bigSettings->getLocale(), 'ca'); ?>>Catalan (Catal&agrave;)</option>
+                        <option value="zh-HK" <?php selected($bigSettings->getLocale(), 'zh-HK'); ?>>Chinese Hong Kong (&#32321;&#39636;&#20013;&#25991;)</option>
+                        <option value="zh-CN" <?php selected($bigSettings->getLocale(), 'zh-CN'); ?>>Chinese Simplified (&#31616;&#20307;&#20013;&#25991;)</option>
+                        <option value="zh-TW" <?php selected($bigSettings->getLocale(), 'zh-TW'); ?>>Chinese Traditional (&#32321;&#39636;&#20013;&#25991;)</option>
+                        <option value="hr" <?php selected($bigSettings->getLocale(), 'hr'); ?>>Croatian (Hrvatski jezik)</option>
+                        <option value="cs" <?php selected($bigSettings->getLocale(), 'cs'); ?>>Czech (&#269;e&#353;tina)</option>
+                        <option value="da" <?php selected($bigSettings->getLocale(), 'da'); ?>>Danish (Dansk)</option>
+                        <option value="nl-BE" <?php selected($bigSettings->getLocale(), 'nl-BE'); ?>>Dutch (Belgium)</option>
+                        <option value="nl" <?php selected($bigSettings->getLocale(), 'nl'); ?>>Dutch (Nederlands)</option>
+                        <option value="en-AU" <?php selected($bigSettings->getLocale(), 'en-AU'); ?>>English/Australia</option>
+                        <option value="en-NZ" <?php selected($bigSettings->getLocale(), 'en-NZ'); ?>>English/New Zealand</option>
+                        <option value="en-GB" <?php selected($bigSettings->getLocale(), 'en-GB'); ?>>English/UK</option>
+                        <option value="eo" <?php selected($bigSettings->getLocale(), 'eo'); ?>>Esperanto</option>
+                        <option value="et" <?php selected($bigSettings->getLocale(), 'et'); ?>>Estonian (eesti keel)</option>
+                        <option value="fo" <?php selected($bigSettings->getLocale(), 'fo'); ?>>Faroese (f&oslash;royskt)</option>
+                        <option value="fa" <?php selected($bigSettings->getLocale(), 'fa'); ?>>Farsi/Persian (&#8235;(&#1601;&#1575;&#1585;&#1587;&#1740;</option>
+                        <option value="fi" <?php selected($bigSettings->getLocale(), 'fi'); ?>>Finnish (suomi)</option>
+                        <option value="fr" <?php selected($bigSettings->getLocale(), 'fr'); ?>>French (Fran&ccedil;ais)</option>
+                        <option value="fr-CH" <?php selected($bigSettings->getLocale(), 'fr-CH'); ?>>French/Swiss (Fran&ccedil;ais de Suisse)</option>
+                        <option value="gl" <?php selected($bigSettings->getLocale(), 'gl'); ?>>Galician</option>
+                        <option value="ge" <?php selected($bigSettings->getLocale(), 'ge'); ?>>Georgian</option>
+                        <option value="de" <?php selected($bigSettings->getLocale(), 'de'); ?>>German (Deutsch)</option>
+                        <option value="el" <?php selected($bigSettings->getLocale(), 'el'); ?>>Greek (&#917;&#955;&#955;&#951;&#957;&#953;&#954;&#940;)</option>
+                        <option value="he" <?php selected($bigSettings->getLocale(), 'he'); ?>>Hebrew (&#8235;(&#1506;&#1489;&#1512;&#1497;&#1514;</option>
+                        <option value="hi" <?php selected($bigSettings->getLocale(), 'hi'); ?>>Hindi (&#2361;&#2367;&#2306;&#2342;&#2368;)</option>
+                        <option value="hu" <?php selected($bigSettings->getLocale(), 'hu'); ?>>Hungarian (Magyar)</option>
+                        <option value="is" <?php selected($bigSettings->getLocale(), 'is'); ?>>Icelandic (&Otilde;slenska)</option>
+                        <option value="id" <?php selected($bigSettings->getLocale(), 'id'); ?>>Indonesian (Bahasa Indonesia)</option>
+                        <option value="it" <?php selected($bigSettings->getLocale(), 'it'); ?>>Italian (Italiano)</option>
+                        <option value="ja" <?php selected($bigSettings->getLocale(), 'ja'); ?>>Japanese (&#26085;&#26412;&#35486;)</option>
+                        <option value="kk" <?php selected($bigSettings->getLocale(), 'kk'); ?>>Kazakhstan (Kazakh)</option>
+                        <option value="km" <?php selected($bigSettings->getLocale(), 'km'); ?>>Khmer</option>
+                        <option value="ko" <?php selected($bigSettings->getLocale(), 'ko'); ?>>Korean (&#54620;&#44397;&#50612;)</option>
+                        <option value="lv" <?php selected($bigSettings->getLocale(), 'lv'); ?>>Latvian (Latvie&ouml;u Valoda)</option>
+                        <option value="lt" <?php selected($bigSettings->getLocale(), 'lt'); ?>>Lithuanian (lietuviu kalba)</option>
+                        <option value="lb" <?php selected($bigSettings->getLocale(), 'lb'); ?>>Luxembourgish</option>
+                        <option value="mk" <?php selected($bigSettings->getLocale(), 'mk'); ?>>Macedonian</option>
+                        <option value="ml" <?php selected($bigSettings->getLocale(), 'ml'); ?>>Malayalam</option>
+                        <option value="ms" <?php selected($bigSettings->getLocale(), 'ms'); ?>>Malaysian (Bahasa Malaysia)</option>
+                        <option value="no" <?php selected($bigSettings->getLocale(), 'no'); ?>>Norwegian (Norsk)</option>
+                        <option value="pl" <?php selected($bigSettings->getLocale(), 'pl'); ?>>Polish (Polski)</option>
+                        <option value="pt" <?php selected($bigSettings->getLocale(), 'pt'); ?>>Portuguese (Portugu&ecirc;s)</option>
+                        <option value="pt-BR" <?php selected($bigSettings->getLocale(), 'pt-BR'); ?>>Portuguese/Brazilian (Portugu&ecirc;s)</option>
+                        <option value="rm" <?php selected($bigSettings->getLocale(), 'rm'); ?>>Rhaeto-Romanic (Romansh)</option>
+                        <option value="ro" <?php selected($bigSettings->getLocale(), 'ro'); ?>>Romanian (Rom&acirc;n&#259;)</option>
+                        <option value="ru" <?php selected($bigSettings->getLocale(), 'ru'); ?>>Russian (&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;)</option>
+                        <option value="sr" <?php selected($bigSettings->getLocale(), 'sr'); ?>>Serbian (&#1089;&#1088;&#1087;&#1089;&#1082;&#1080; &#1112;&#1077;&#1079;&#1080;&#1082;)</option>
+                        <option value="sr-SR" <?php selected($bigSettings->getLocale(), 'sr-SR'); ?>>Serbian (srpski jezik)</option>
+                        <option value="sk" <?php selected($bigSettings->getLocale(), 'sk'); ?>>Slovak (Slovencina)</option>
+                        <option value="sl" <?php selected($bigSettings->getLocale(), 'sl'); ?>>Slovenian (Slovenski Jezik)</option>
+                        <option value="es" <?php selected($bigSettings->getLocale(), 'es'); ?>>Spanish (Espa&ntilde;ol)</option>
+                        <option value="sv" <?php selected($bigSettings->getLocale(), 'sv'); ?>>Swedish (Svenska)</option>
+                        <option value="ta" <?php selected($bigSettings->getLocale(), 'ta'); ?>>Tamil (&#2980;&#2990;&#3007;&#2996;&#3021;)</option>
+                        <option value="th" <?php selected($bigSettings->getLocale(), 'th'); ?>>Thai (&#3616;&#3634;&#3625;&#3634;&#3652;&#3607;&#3618;)</option>
+                        <option value="tj" <?php selected($bigSettings->getLocale(), 'tj'); ?>>Tajikistan</option>
+                        <option value="tr" <?php selected($bigSettings->getLocale(), 'tr'); ?>>Turkish (T&uuml;rk&ccedil;e)</option>
+                        <option value="uk" <?php selected($bigSettings->getLocale(), 'uk'); ?>>Ukranian (&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;)</option>
+                        <option value="vi" <?php selected($bigSettings->getLocale(), 'vi'); ?>>Vietnamese (Ti&#7871;ng Vi&#7879;t)</option>
+                        <option value="cy-GB" <?php selected($bigSettings->getLocale(), 'cy-GB'); ?>>Welsh/UK (Cymraeg)</option>
+                    </select>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="time-date-picker">Calendar Type</label></th>
+                <td><select name="time-date-picker" id="time-date-picker">
+                        <option <?php selected($bigSettings->getCalendarType(), 'date'); ?> value="date">Date Picker</option>
+                        <option <?php selected($bigSettings->getCalendarType(), 'datetime'); ?> value="datetime">Date and Time Picker</option>
+                    </select>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th><label for="date-format">Date Format</label></th>
+                <td><input type="text" name="date-format" id="date-format" class="regular-text" value="<?php echo $bigSettings->getDateFormat(); ?>" /><br />
+                    <span class="description">
+                        Visit JQuery <a href="http://docs.jquery.com/UI/Datepicker/formatDate">UI/Datepicker/formatDate</a> to find more date formats.
+                    </span>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th><label for="time-format">Time Format</label></th>
+                <td><input type="text" name="time-format" id="time-format" class="regular-text" value="<?php echo $bigSettings->getTimeFormat(); ?>" /><br />
+                    <span class="description">
+                        Change the format (default is "hh:mm tt"): <br />
+                        h --> Hour with no leading 0<br />
+                        hh --> Hour with leading 0<br />
+                        m --> Minute with no leading 0<br />
+                        mm --> Minute with leading 0<br />
+                        s --> Second with no leading 0<br />
+                        ss --> Second with leading 0<br />
+                        l --> Milliseconds always with leading 0<br />
+                        t --> a or p for AM/PM<br />
+                        T --> A or P for AM/PM<br />
+                        tt --> am or pm for AM/PM<br />
+                        TT --> AM or PM for AM/PM<br />
+                    </span>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th><label for="ampm">Use AM/PM</label></th>
+                <td><label for="ampm"><input type="checkbox" name="ampm" id="ampm" <?php checked($bigSettings->getAmpm(), 'true'); ?>/> Check to enable am/pm notation</label></td>
+            </tr>
+            <tr valign="top">
+                <th><label for="minute-bar">Show Minute Bar</label></th>
+                <td><label for="minute-bar"><input type="checkbox" name="minute-bar" id="minute-bar" <?php checked($bigSettings->getShowMinute(), 'true'); ?>/> Check to enable the minute bar</label></td>
+            </tr>
+        </table>
+        <h3>Google Maps Api Settings:</h3>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row"><label for="gapiKey">Enter your Google Maps API key</label></th>
+                <td><input type="text" name="gapiKey" id="gapiKey" class="regular-text" value="<?php _e($bigSettings->getGapiKey()) ?>"/><br/>
+                    <span class="description">To create your API key:<br /><br />
+
+                        1. Visit the APIs Console at <a href="https://code.google.com/apis/console">https://code.google.com/apis/console</a> and log in with your Google Account.<br />
+                        2. Click the Services link from the left-hand menu.<br />
+                        3. Activate the Google Maps API v3 service.<br />
+                        4. Click the API Access link from the left-hand menu. Your API key is available from the API Access page, in the Simple API Access section. Maps API applications use the Key for browser apps.</span></td>
+            </tr>
+        </table>
+        <h3>Conversion Tracking:</h3>
+        <table class="form-table">
+            <tr valign="top">
+                <th scope="row"><label for="trackingCallback">Callback Function</label></th>
+                <td>
+                    <textarea name="trackingCallback" id="trackingCallback" class="regular-text" cols="55" rows="9"><?php _e($bigSettings->getTrackingCallback()) ?></textarea>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="tracking">Conversion Tracking Script</label></th>
+                <td>
+                    <textarea id="tarcking" name="tracking" class="regular-text" cols="55" rows="9"><?php _e($bigSettings->getTracking()) ?></textarea>
+                </td>
+            </tr>
+        </table>
+        <p class="submit"><input type="submit" name="submit" id="submit" class="button-primary" value="Save Changes"  /></p></form>
+</div>
