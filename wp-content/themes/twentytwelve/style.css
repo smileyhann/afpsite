@@ -1519,6 +1519,7 @@ img#wpstats {
 	body.attachment .site-content,
 	body.full-width .site-content {
 		width: 100%;
+
 	}
 	.widget-area {
 		float: right;
@@ -1885,9 +1886,83 @@ margin-bottom: -100px;
 }
 
 
+#footer-sidebar {
+display:block;
+height: 250px;
+}
 
+#footer-sidebar1 {
+float: left;
+width: 200px;
+margin-left:5px;
+}
 
+#footer-sidebar2 {
+float: left;
+width: 350px;
 
+}
+
+#footer-sidebar3 {
+float: left;
+width: 200px;
+
+}
+
+#footer-sidebar4 {
+float: left;
+width: 200px;
+}
+
+#nav_menu-3 h3{
+	color:#2f530e;
+	font-size: 10px;
+	font-style: italic;
+	margin-bottom: 10px;
+}
+#nav_menu-4 h3{
+	color:#2f530e;
+	font-size: 10px;
+	font-style: italic;
+	margin-bottom: 10px;
+}
+
+#nav_menu-5 h3{
+	color:#2f530e;
+	font-size: 10px;
+	font-style: italic;
+	margin-bottom: 10px;
+}
+
+#nav_menu-6 h3{
+	color:#2f530e;
+	font-size: 10px;
+	font-style: italic;
+	margin-bottom: 10px;
+}
+
+#menu-footer-1 li a{
+	color: #000;	
+	text-decoration: none;
+	font-size: 12px;
+}
+
+#menu-footer-2 li a{
+	color: #000;	
+	text-decoration: none;
+	font-size: 12px;
+}
+
+#menu-footer-3 li a{
+	color: #000;	
+	text-decoration: none;
+	font-size: 12px;
+}
+#menu-footer-4 li a{
+	color: #000;	
+	text-decoration: none;
+	font-size: 12px;
+}
 
 
 
