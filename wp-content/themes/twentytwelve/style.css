@@ -1881,6 +1881,7 @@ margin-bottom: -100px;
 }
 #about_img img{
 	width: 500px;
+	float: right;
 }
 
 
@@ -1981,3 +1982,6 @@ width: 200px;
 	height: 150px;
 	margin: 5px;
 }
+
+
+
